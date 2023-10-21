@@ -38,6 +38,30 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
+  let startPointer = 0;
+  const letterStep = 10;
+  let decodedExpr = '';
+  for (startPointer; startPointer < expr.length; startPointer += letterStep) {
+    // slice encoded letter with length letterStep
+    const encodedLetter = expr.slice(startPointer, startPointer + letterStep);
+    if (encodedLetter[0] === '*') {
+      // check if it's space
+      decodedExpr += ' ';
+    } else {
+      // decode each symbol of letter into Morse-notation
+      let symb = '';
+      for (let i = encodedLetter.indexOf('1'); i < letterStep; i += 2) {
+        if (encodedLetter.slice(i, i + 2) === '11') {
+          symb += '-';
+        } else {
+          symb += '.';
+        }
+      }
+      // get letter from morse table
+      decodedExpr += MORSE_TABLE[symb];
+    }
+  }
+  return decodedExpr;
 }
 
 module.exports = {
